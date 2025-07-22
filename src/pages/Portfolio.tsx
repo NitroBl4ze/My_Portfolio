@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 
 const Portfolio = () => {
   const [loaded, setLoaded] = useState(false);
+  const [showScrollToTopButton, setShowScrollToTopButton] = useState(false); // State for scroll-to-top button visibility
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -12,6 +13,27 @@ const Portfolio = () => {
     }, 100);
     return () => clearTimeout(timer);
   }, []);
+
+  // Effect to handle scroll-to-top button visibility
+  useEffect(() => {
+    const handleScroll = () => {
+      const experienceSection = document.getElementById('experience');
+      if (experienceSection) {
+        // Show button if the scroll position is past a certain point on the page (e.g., half of viewport height)
+        if (window.scrollY > (window.innerHeight * 0.5)) {
+          setShowScrollToTopButton(true);
+        } else {
+          setShowScrollToTopButton(false);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    // Initial check in case the user loads the page already scrolled down
+    handleScroll(); 
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -26,24 +48,24 @@ const Portfolio = () => {
     window.open('https://drive.google.com/file/d/1PWB5F-T8iOjqzfM9Hl2sf86bhe81-XCP/view?usp=drive_link', '_blank');
   };
 
-  const handleViewReport = (reportType: string) => {
-    // Handle PDF report viewing based on report type
-    if (reportType === 'instrumentation') {
-      window.open('https://drive.google.com/file/d/1obuLl5KuhIqvdlP3v6ACmTxikYEZ7uqt/view?usp=drive_link', '_blank');
+  const handleViewReport = (pdfUrl: string) => {
+    if (pdfUrl) {
+      window.open(pdfUrl, '_blank');
     } else {
-      console.log(`Opening ${reportType} report`);
-      // You can add other report links here when available
-      window.open('#', '_blank');
+      console.warn("No PDF URL provided to handleViewReport.");
     }
   };
 
   const handleViewProject = (projectName: string) => {
-    // Handle project viewing - redirect to GitHub repository
-    if (projectName === 'certificate-generator' || projectName === 'mail-sender') {
+    if (projectName === 'certificate-generator') {
       window.open('https://github.com/NitroBl4ze/Automated-Certificate-Generator', '_blank');
+    } else if (projectName === 'mail-sender') {
+      window.open('https://github.com/NitroBl4ze/Autonomous_Mailer', '_blank');
+    } else if (projectName === 'photo-enhancer') { // Specific URL for Photo Enhance using AI
+      window.open('https://github.com/NitroBl4ze/Photo-Enhancer', '_blank');
     } else {
       console.log(`Opening ${projectName} project`);
-      window.open('#', '_blank');
+      window.open('https://acmsjce.acm.org', '_blank'); // Fallback or placeholder for other projects
     }
   };
 
@@ -55,6 +77,43 @@ const Portfolio = () => {
   const handleImageClick = (imageUrl: string) => {
     window.open(imageUrl, '_blank');
   };
+
+  // Data for Semester Certificates
+  const semesterCertificates = [
+    { text: 'Sem 1', url: 'https://drive.google.com/file/d/1XmRAfjMGMOObhr9SIHhirmpwteWaDRH5/view?usp=drive_link' },
+    { text: 'Sem 2', url: 'https://drive.google.com/file/d/1Ka0UsuGYxnUoGk3QJrv7TuWnnGLEDvYZ/view?usp=drive_link' },
+    { text: 'Sem 3', url: 'https://drive.google.com/file/d/1WiCG9cMKZeA6fmmaW3m6mKxShrv8OMfw/view?usp=drive_link' },
+    { text: 'Sem 4', url: 'https://drive.google.com/file/d/1KEXNFWRn53iQICJhiE_tWBNV6PIxICP6/view?usp=sharing' },
+  ];
+
+  // Data structure for Certifications
+  const certifications = [
+    { 
+      name: 'Foundations of Cloud IoT and Edge ML – NPTEL', 
+      type: 'certificate', 
+      url: 'https://archive.nptel.ac.in/content/noc/NOC25/SEM1/Ecertificates/106/noc25-cs75/Course/NPTEL25CS75S45450031704471881.pdf' 
+    },
+    { 
+      name: 'Essentials of Cloud Computing – Infosys Springboard', 
+      type: 'certificate', 
+      url: 'https://drive.google.com/file/d/1I1d3EwirxG0_JirX5PGGjZwybVMSwBdS/view?usp=drive_link' 
+    },
+    { 
+      name: 'Cloud Computing & CRM - Salesforce Trailhead', 
+      type: 'profile', 
+      url: 'https://www.salesforce.com/trailblazer/bwj9k9a6tkqltkko1y' 
+    },
+    { 
+      name: 'Introduction to Cyber Security - Infosys Springboard', 
+      type: 'certificate', 
+      url: 'https://drive.google.com/file/d/1Q3XDzxB7dBPtH4UHYk63fHnY9YaqsAFj/view?usp=drive_link' 
+    },
+    { 
+      name: 'Net-Zero Energy & Water Buildings – Solar Decathlon India', 
+      type: 'certificate', 
+      url: 'https://drive.google.com/file/d/1V_LnYiujeM57KW_6JOwTFBL42Aayt1Xl/view?usp=drive_link' 
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -102,16 +161,18 @@ const Portfolio = () => {
         </div>
       </div>
 
-      {/* Back to Top Button */}
-      <div className="fixed bottom-8 right-8 z-50">
-        <button
-          onClick={scrollToTop}
-          className="bg-black/40 backdrop-blur-lg rounded-full p-3 border border-white/20 text-gray-300 hover:text-white transition-all duration-300 hover:scale-110 hover:bg-white/10"
-          title="Back to Top"
-        >
-          <ArrowUp size={20} />
-        </button>
-      </div>
+      {/* Back to Top Button - Conditional Rendering */}
+      {showScrollToTopButton && (
+        <div className="fixed bottom-8 right-8 z-50">
+          <button
+            onClick={scrollToTop}
+            className="bg-black/40 backdrop-blur-lg rounded-full p-3 border border-white/20 text-gray-300 hover:text-white transition-all duration-300 hover:scale-110 hover:bg-white/10"
+            title="Back to Top"
+          >
+            <ArrowUp size={20} />
+          </button>
+        </div>
+      )}
 
       {/* Hero Section */}
       <section className={`pt-32 pb-20 px-4 transition-opacity duration-1000 ${loaded ? 'opacity-100' : 'opacity-0'}`}>
@@ -194,7 +255,7 @@ const Portfolio = () => {
                   "Use LUTs, transitions, and effects to deliver cinematic content tailored to brand identity",
                   "Collaborate with clients to develop video strategies that maximize engagement"
                 ],
-                action: { type: 'gallery', text: 'View Gallery' }
+                action: { type: 'instagram', text: 'Explore Now', url: 'https://www.instagram.com/studio.nsr_?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==' }
               },
               {
                 title: "Entrepreneurship Intern",
@@ -205,7 +266,7 @@ const Portfolio = () => {
                   "Learned startup frameworks, market validation, and pitch creation",
                   "Participated in innovation bootcamps and collaborated with peers to develop MVPs"
                 ],
-                action: { type: 'pdf', text: 'View Report', file: 'entrepreneurship' }
+                action: { type: 'pdf', text: 'View Certificate', file: 'entrepreneurship', url: 'https://drive.google.com/file/d/1A4L5hZHtPOMm3KbU3vC1iD2SVVCl8kJG/view?usp=drive_link' }
               },
               {
                 title: "Instrumentation Intern",
@@ -216,7 +277,7 @@ const Portfolio = () => {
                   "Worked with SCADA systems and PLCs for real-time process control",
                   "Assisted in instrumentation diagnostics and industrial automation setups"
                 ],
-                action: { type: 'pdf', text: 'View Report', file: 'instrumentation' }
+                action: { type: 'pdf', text: 'View Report', file: 'instrumentation', url: 'https://drive.google.com/file/d/1obuLl5KuhIqvdlP3v6ACmTxikYEZ7uqt/view?usp=drive_link' }
               },
               {
                 title: "Social Media Intern",
@@ -227,7 +288,7 @@ const Portfolio = () => {
                   "Edited and optimized promotional videos for web and social media",
                   "Supported website design and content integration efforts"
                 ],
-                action: { type: 'instagram', text: 'Explore Now', url: 'https://instagram.com/tervpro' }
+                action: { type: 'instagram', text: 'Explore Now', url: 'https://www.instagram.com/terv.pro?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==' }
               }
             ].map((job, index) => (
               <Card key={index} className="bg-white/10 backdrop-blur-lg border-white/20 text-white animate-scale-in hover:scale-105 transition-all duration-300">
@@ -264,25 +325,20 @@ const Portfolio = () => {
                           {job.action.text}
                         </Button>
                       )}
-                      {job.action.type === 'pdf' && (
+                      {(job.action.type === 'pdf' || job.action.type === 'instagram') && job.action.url && (
                         <Button
-                          onClick={() => handleViewReport(job.action.file)}
+                          onClick={() => {
+                            if (job.action.type === 'pdf') {
+                              handleViewReport(job.action.url);
+                            } else if (job.action.type === 'instagram') {
+                              window.open(job.action.url, '_blank');
+                            }
+                          }}
                           variant="outline"
                           size="sm"
                           className="border-purple-400 text-purple-300 hover:bg-purple-600 hover:text-white transition-all duration-300 hover:scale-105"
                         >
-                          <FileText size={16} className="mr-2" />
-                          {job.action.text}
-                        </Button>
-                      )}
-                      {job.action.type === 'instagram' && (
-                        <Button
-                          onClick={() => window.open(job.action.url, '_blank')}
-                          variant="outline"
-                          size="sm"
-                          className="border-purple-400 text-purple-300 hover:bg-purple-600 hover:text-white transition-all duration-300 hover:scale-105"
-                        >
-                          <Instagram size={16} className="mr-2" />
+                          {job.action.type === 'pdf' ? <FileText size={16} className="mr-2" /> : <Instagram size={16} className="mr-2" />}
                           {job.action.text}
                         </Button>
                       )}
@@ -315,8 +371,26 @@ const Portfolio = () => {
               <CardContent>
                 <div className="space-y-2">
                   <p><strong>Duration:</strong> Nov 2022 – May 2026</p>
-                  <p><strong>CGPA:</strong> 8.0</p>
+                  <p><strong>CGPA:</strong> 8.03</p>
                   <p><strong>Activities:</strong> Active in technical clubs (E-Cell, Social Media Team), Participated in workshops, hackathons, and leadership programs</p>
+                </div>
+                {/* Semester Certificates Section */}
+                <div className="mt-6">
+                  <h3 className="text-xl font-semibold mb-4 text-purple-300">Semester Certificates</h3>
+                  <div className="flex flex-wrap gap-3">
+                    {semesterCertificates.map((cert, index) => (
+                      <Button
+                        key={index}
+                        onClick={() => window.open(cert.url, '_blank')}
+                        variant="outline"
+                        size="sm"
+                        className="border-purple-400 text-purple-300 hover:bg-purple-600 hover:text-white transition-all duration-300 hover:scale-105"
+                      >
+                        <FileText size={16} className="mr-2" />
+                        {cert.text}
+                      </Button>
+                    ))}
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -348,11 +422,23 @@ const Portfolio = () => {
                 title: "ACM Student Chapter Website",
                 tech: "React.js",
                 description: "Co-developed a scalable and responsive web portal. Focused on modular UI and user engagement features.",
-                showButton: false,
-                status: "In Progress"
+                showButton: true,
+                projectId: "acm"
+              },
+              {
+                title: "Photo Enhace using AI",
+                tech: "React + Vite",
+                description: "Developed a website that automatically detect the colour palettes of the photo and Enhance the photo using AI trained with Basic LLMs.",
+                showButton: true,
+                projectId: "photo-enhancer"
               }
             ].map((project, index) => (
-              <Card key={index} className="bg-white/10 backdrop-blur-lg border-white/20 text-white hover:bg-white/20 transition-all duration-300 animate-scale-in">
+              <Card 
+                key={index} 
+                className={`bg-white/10 backdrop-blur-lg border-white/20 text-white hover:bg-white/20 transition-all duration-300 animate-scale-in ${
+                  project.title === 'Photo Enhace using AI' ? 'md:col-span-2 lg:col-span-3 mx-auto w-full md:max-w-md' : '' // Center on medium+ screens
+                }`}
+              >
                 <CardHeader>
                   <CardTitle className="text-xl">{project.title}</CardTitle>
                   <CardDescription className="text-purple-300">{project.tech}</CardDescription>
@@ -371,7 +457,7 @@ const Portfolio = () => {
                     </Button>
                   ) : (
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-yellow-600/30 text-yellow-300 border border-yellow-600/50">
-                      {project.status}
+                      {project.showButton}
                     </span>
                   )}
                 </CardContent>
@@ -423,16 +509,16 @@ const Portfolio = () => {
         </div>
       </section>
 
-      {/* Achievements & Certifications */}
-      <section className="py-20 px-4 bg-black/30">
+      {/* Achievements Section */}
+      <section id="achievements" className="py-20 px-4">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-white text-center mb-12 animate-fade-in">Achievements & Certifications</h2>
-          <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
+          <h2 className="text-4xl font-bold text-white text-center mb-12 animate-fade-in">Achievements</h2>
+          <div className="max-w-xl mx-auto">
             <Card className="bg-white/10 backdrop-blur-lg border-white/20 text-white animate-scale-in hover:scale-105 transition-all duration-300">
               <CardHeader>
                 <CardTitle className="text-xl text-purple-300 flex items-center">
                   <Award size={24} className="mr-2 animate-pulse" />
-                  Achievements
+                  Key Achievements
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -443,24 +529,44 @@ const Portfolio = () => {
                 </ul>
               </CardContent>
             </Card>
-            
-            <Card className="bg-white/10 backdrop-blur-lg border-white/20 text-white animate-scale-in hover:scale-105 transition-all duration-300">
-              <CardHeader>
-                <CardTitle className="text-xl text-purple-300 flex items-center">
-                  <Award size={24} className="mr-2 animate-pulse" />
-                  Certifications
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2 text-sm">
-                  <li>• Foundations of Cloud IoT and Edge ML – NPTEL</li>
-                  <li>• Essentials of Cloud Computing – Infosys Springboard</li>
-                  <li>• Cloud Computing – Self-Paced Learning</li>
-                  <li>• Salesforce Trailhead – Cloud Computing & CRM</li>
-                  <li>• Net-Zero Energy & Water Buildings – Solar Decathlon India</li>
-                </ul>
-              </CardContent>
-            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Certifications Section */}
+      <section id="certifications" className="py-20 px-4 bg-black/30">
+        <div className="container mx-auto">
+          <h2 className="text-4xl font-bold text-white text-center mb-12 animate-fade-in">Certifications</h2>
+          <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
+            {certifications.map((cert, index) => (
+              <Card 
+                key={index} 
+                className={`bg-white/10 backdrop-blur-lg border-white/20 text-white animate-scale-in hover:scale-105 transition-all duration-300 ${
+                  cert.name === 'Net-Zero Energy & Water Buildings – Solar Decathlon India' ? 'md:col-span-2 mx-auto w-full md:max-w-md' : '' 
+                }`}
+              >
+                <CardHeader>
+                  <CardTitle className={`text-xl text-purple-300 ${
+                    cert.name === 'Net-Zero Energy & Water Buildings – Solar Decathlon India' ? 'text-center' : ''
+                  }`}>
+                    {cert.name}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className={`
+                  ${cert.name === 'Net-Zero Energy & Water Buildings – Solar Decathlon India' ? 'flex justify-center' : ''}
+                `}>
+                  <Button
+                    onClick={() => window.open(cert.url, '_blank')}
+                    variant="outline"
+                    size="sm"
+                    className="border-purple-400 text-purple-300 hover:bg-purple-600 hover:text-white transition-all duration-300 hover:scale-105"
+                  >
+                    {cert.type === 'certificate' ? <FileText size={16} className="mr-2" /> : <ExternalLink size={16} className="mr-2" />}
+                    {cert.type === 'certificate' ? 'View Certificate' : 'View Profile'}
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
@@ -482,6 +588,11 @@ const Portfolio = () => {
                   title: "Studio.NSR-Founder",
                   description: "Founder of Studio.NSR, a creative brand specializing in iPhone-shot reels and visual storytelling. Former Social Media Head at St. Joseph's College of Engineering, where I led high-impact digital engagement initiatives.",
                   image: "/lovable-uploads/e6f98ae5-975a-4c15-9c84-2f28474b8ac4.png"
+                },
+                {
+                  title: "Orientation - 2023 and 2024",
+                  description: "Over the past two years, I led the videography for my college’s Orientation Program, capturing the spirit of fresh beginnings. In 2023, I focused on setting the tone with cinematic edits. By 2024, I scaled up with multi-cam angles, gimbal shots, and vibrant color grading. Every reel, crafted under Studio.NSR, was designed to make students feel welcomed and remembered through visually engaging.",
+                  image: "/lovable-uploads/IMG_5959.jpg"
                 },
                 {
                   title: "Internship-AUCED",
