@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Mail, Phone, Linkedin, MapPin, Download, ExternalLink, Calendar, Award, Code, Video, Briefcase, GraduationCap, ArrowUp, FileText, Instagram, Home } from 'lucide-react';
+import { Mail, Phone, Linkedin, Download, ExternalLink, Award, Code, Video, Briefcase, GraduationCap, ArrowUp, FileText, Instagram, Home, Image as GalleryIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 const Portfolio = () => {
   const [loaded, setLoaded] = useState(false);
   const [showScrollToTopButton, setShowScrollToTopButton] = useState(false); // State for scroll-to-top button visibility
+  const [showDock, setShowDock] = useState(true); // State for floating dock visibility
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -14,16 +15,32 @@ const Portfolio = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Effect to handle scroll-to-top button visibility
+  // Effect to handle scroll-to-top button and floating dock visibility
   useEffect(() => {
     const handleScroll = () => {
       const experienceSection = document.getElementById('experience');
+      const contactSection = document.getElementById('contact');
+
+      // Logic for Back to Top button
       if (experienceSection) {
-        // Show button if the scroll position is past a certain point on the page (e.g., half of viewport height)
         if (window.scrollY > (window.innerHeight * 0.5)) {
           setShowScrollToTopButton(true);
         } else {
           setShowScrollToTopButton(false);
+        }
+      }
+
+      // Logic for Floating Dock
+      if (contactSection) {
+        // Hide the dock when the user scrolls near the contact section
+        const contactTop = contactSection.getBoundingClientRect().top;
+        const viewportHeight = window.innerHeight;
+
+        // Condition to hide the dock when the contact section is close to or enters the viewport
+        if (contactTop < viewportHeight * 0.8) {
+          setShowDock(false);
+        } else {
+          setShowDock(true);
         }
       }
     };
@@ -33,7 +50,6 @@ const Portfolio = () => {
     handleScroll(); 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -137,39 +153,41 @@ const Portfolio = () => {
         </div>
       </nav>
 
-      {/* Floating Dock */}
-      <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
-        <div className="bg-black/40 backdrop-blur-lg rounded-full px-6 py-3 border border-white/20 animate-fade-in">
-          <div className="flex space-x-4">
-            {[
-              { icon: Home, label: 'About', id: 'about' },
-              { icon: Briefcase, label: 'Experience', id: 'experience' },
-              { icon: Code, label: 'Projects', id: 'projects' },
-              { icon: Award, label: 'Skills', id: 'skills' },
-              { icon: Mail, label: 'Contact', id: 'contact' }
-            ].map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className="p-2 text-gray-300 hover:text-white transition-all duration-300 hover:scale-110 hover:bg-white/10 rounded-full"
-                title={item.label}
-              >
-                <item.icon size={20} />
-              </button>
-            ))}
+      {/* Floating Dock - Conditional Rendering */}
+      {showDock && (
+        <div className="fixed bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 z-50">
+          <div className="bg-black/40 backdrop-blur-lg rounded-full px-4 py-2 md:px-6 md:py-3 border border-white/20 animate-fade-in">
+            <div className="flex space-x-2 md:space-x-4">
+              {[
+                { icon: Home, label: 'About', id: 'about' },
+                { icon: Briefcase, label: 'Experience', id: 'experience' },
+                { icon: Code, label: 'Projects', id: 'projects' },
+                { icon: Award, label: 'Skills', id: 'skills' },
+                { icon: GalleryIcon, label: 'Gallery', id: 'gallery' }
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className="p-1 md:p-2 text-gray-300 hover:text-white transition-all duration-300 hover:scale-110 hover:bg-white/10 rounded-full"
+                  title={item.label}
+                >
+                  <item.icon size={16} className="md:size-[20px]" />
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Back to Top Button - Conditional Rendering */}
       {showScrollToTopButton && (
-        <div className="fixed bottom-8 right-8 z-50">
+        <div className="fixed bottom-4 right-4 md:bottom-8 md:right-8 z-50">
           <button
             onClick={scrollToTop}
-            className="bg-black/40 backdrop-blur-lg rounded-full p-3 border border-white/20 text-gray-300 hover:text-white transition-all duration-300 hover:scale-110 hover:bg-white/10"
+            className="bg-black/40 backdrop-blur-lg rounded-full p-2 md:p-3 border border-white/20 text-gray-300 hover:text-white transition-all duration-300 hover:scale-110 hover:bg-white/10"
             title="Back to Top"
           >
-            <ArrowUp size={20} />
+            <ArrowUp size={16} className="md:size-[20px]" />
           </button>
         </div>
       )}
@@ -229,7 +247,7 @@ const Portfolio = () => {
           <h2 className="text-4xl font-bold text-white text-center mb-12 animate-fade-in">About Me</h2>
           <div className="max-w-4xl mx-auto">
             <Card className="bg-white/10 backdrop-blur-lg border-white/20 text-white animate-scale-in">
-              <CardContent className="p-8">
+              <CardContent className="p-8 text-center">
                 <p className="text-lg leading-relaxed">
                   A passionate Full-Stack Developer with a creative edge as a Video Editor. Experienced in building scalable web applications using React.js, Node.js, and Python, while also delivering high-impact digital content through Premiere Pro and After Effects. Strong engineering foundation in Electronics and Instrumentation with exposure to SCADA, PLC, and cloud platforms including Salesforce Trailhead CRM cloud modules. A dynamic multitasker with a proven record in event management, content creation, and entrepreneurship.
                 </p>
@@ -292,8 +310,8 @@ const Portfolio = () => {
               }
             ].map((job, index) => (
               <Card key={index} className="bg-white/10 backdrop-blur-lg border-white/20 text-white animate-scale-in hover:scale-105 transition-all duration-300">
-                <CardHeader>
-                  <div className="flex items-center space-x-3">
+                <CardHeader className="text-center">
+                  <div className="flex items-center space-x-3 justify-center">
                     <div className="p-2 bg-purple-600 rounded-lg animate-pulse">
                       {job.icon}
                     </div>
@@ -303,8 +321,8 @@ const Portfolio = () => {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 mb-4">
+                <CardContent className="text-center">
+                  <ul className="space-y-2 mb-4 list-inside text-left inline-block">
                     {job.description.map((item, i) => (
                       <li key={i} className="flex items-start">
                         <span className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
@@ -313,7 +331,7 @@ const Portfolio = () => {
                     ))}
                   </ul>
                   {job.action && (
-                    <div className="mt-4">
+                    <div className="mt-4 flex justify-center">
                       {job.action.type === 'gallery' && (
                         <Button
                           onClick={() => scrollToSection('gallery')}
@@ -358,7 +376,7 @@ const Portfolio = () => {
           <div className="max-w-2xl mx-auto">
             <Card className="bg-white/10 backdrop-blur-lg border-white/20 text-white animate-scale-in hover:scale-105 transition-all duration-300">
               <CardHeader>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3 justify-center">
                   <div className="p-2 bg-purple-600 rounded-lg animate-pulse">
                     <GraduationCap size={24} />
                   </div>
@@ -368,16 +386,16 @@ const Portfolio = () => {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="text-center">
                 <div className="space-y-2">
                   <p><strong>Duration:</strong> Nov 2022 – May 2026</p>
                   <p><strong>CGPA:</strong> 8.03</p>
                   <p><strong>Activities:</strong> Active in technical clubs (E-Cell, Social Media Team), Participated in workshops, hackathons, and leadership programs</p>
                 </div>
                 {/* Semester Certificates Section */}
-                <div className="mt-6">
+                <div className="mt-6 flex flex-col items-center">
                   <h3 className="text-xl font-semibold mb-4 text-purple-300">Semester Certificates</h3>
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-3 justify-center">
                     {semesterCertificates.map((cert, index) => (
                       <Button
                         key={index}
@@ -435,7 +453,7 @@ const Portfolio = () => {
             ].map((project, index) => (
               <Card 
                 key={index} 
-                className={`bg-white/10 backdrop-blur-lg border-white/20 text-white hover:bg-white/20 transition-all duration-300 animate-scale-in ${
+                className={`bg-white/10 backdrop-blur-lg border-white/20 text-white hover:bg-white/20 transition-all duration-300 animate-scale-in text-center ${
                   project.title === 'Photo Enhace using AI' ? 'md:col-span-2 lg:col-span-3 mx-auto w-full md:max-w-md' : '' // Center on medium+ screens
                 }`}
               >
@@ -446,18 +464,20 @@ const Portfolio = () => {
                 <CardContent>
                   <p className="text-gray-300 mb-4">{project.description}</p>
                   {project.showButton ? (
-                    <Button 
-                      onClick={() => handleViewProject(project.projectId)}
-                      variant="outline" 
-                      size="sm" 
-                      className="border-purple-400 text-purple-300 hover:bg-purple-600 hover:text-white transition-all duration-300"
-                    >
-                      <ExternalLink size={16} className="mr-2" />
-                      View Project
-                    </Button>
+                    <div className="flex justify-center">
+                      <Button 
+                        onClick={() => handleViewProject(project.projectId)}
+                        variant="outline" 
+                        size="sm" 
+                        className="border-purple-400 text-purple-300 hover:bg-purple-600 hover:text-white transition-all duration-300"
+                      >
+                        <ExternalLink size={16} className="mr-2" />
+                        View Project
+                      </Button>
+                    </div>
                   ) : (
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-yellow-600/30 text-yellow-300 border border-yellow-600/50">
-                      {project.showButton}
+                      {project.status}
                     </span>
                   )}
                 </CardContent>
@@ -491,11 +511,11 @@ const Portfolio = () => {
               }
             ].map((skillGroup, index) => (
               <Card key={index} className="bg-white/10 backdrop-blur-lg border-white/20 text-white animate-scale-in hover:scale-105 transition-all duration-300">
-                <CardHeader>
+                <CardHeader className="text-center">
                   <CardTitle className="text-xl text-purple-300">{skillGroup.category}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 justify-center">
                     {skillGroup.skills.map((skill, i) => (
                       <span key={i} className="px-3 py-1 bg-purple-600/30 rounded-full text-sm hover:bg-purple-600/50 transition-all duration-300 hover:scale-105">
                         {skill}
@@ -515,14 +535,14 @@ const Portfolio = () => {
           <h2 className="text-4xl font-bold text-white text-center mb-12 animate-fade-in">Achievements</h2>
           <div className="max-w-xl mx-auto">
             <Card className="bg-white/10 backdrop-blur-lg border-white/20 text-white animate-scale-in hover:scale-105 transition-all duration-300">
-              <CardHeader>
-                <CardTitle className="text-xl text-purple-300 flex items-center">
+              <CardHeader className="text-center">
+                <CardTitle className="text-xl text-purple-300 flex items-center justify-center">
                   <Award size={24} className="mr-2 animate-pulse" />
                   Key Achievements
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
+              <CardContent className="text-center">
+                <ul className="space-y-3 inline-block text-left">
                   <li>🏆 Finalist, National Entrepreneurship Challenge – Ranked 7th nationally (IIT Bombay)</li>
                   <li>👥 Social Media Team Lead – Hosted Orientation Programs (2023, 2024)</li>
                   <li>🚀 Core member of Entrepreneurship Development Cell</li>
@@ -541,8 +561,8 @@ const Portfolio = () => {
             {certifications.map((cert, index) => (
               <Card 
                 key={index} 
-                className={`bg-white/10 backdrop-blur-lg border-white/20 text-white animate-scale-in hover:scale-105 transition-all duration-300 ${
-                  cert.name === 'Net-Zero Energy & Water Buildings – Solar Decathlon India' ? 'md:col-span-2 mx-auto w-full md:max-w-md' : '' 
+                className={`bg-white/10 backdrop-blur-lg border-white/20 text-white animate-scale-in hover:scale-105 transition-all duration-300 text-center ${
+                  cert.name === 'Net-Zero Energy & Water Buildings – Solar Decathlon India' ? 'md:col-span-2 mx-auto w-full md:max-w-md' : '' // Center on medium+ screens
                 }`}
               >
                 <CardHeader>
@@ -553,6 +573,7 @@ const Portfolio = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className={`
+                  flex justify-center
                   ${cert.name === 'Net-Zero Energy & Water Buildings – Solar Decathlon India' ? 'flex justify-center' : ''}
                 `}>
                   <Button
@@ -610,7 +631,7 @@ const Portfolio = () => {
                   image: "/lovable-uploads/18f92c83-5286-49e4-b80e-9d7f33567a8d.png"
                 }
               ].map((item, index) => (
-                <Card key={index} className="bg-white/10 backdrop-blur-lg border-white/20 text-white animate-scale-in hover:scale-105 transition-all duration-300">
+                <Card key={index} className="bg-white/10 backdrop-blur-lg border-white/20 text-white animate-scale-in hover:scale-105 transition-all duration-300 text-center">
                   <CardContent className="p-6">
                     <div 
                       className="aspect-video bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg mb-4 overflow-hidden cursor-pointer"
