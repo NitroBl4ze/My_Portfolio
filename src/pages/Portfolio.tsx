@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Mail, Phone, Linkedin, Download, ExternalLink, Award, Code, Video, Briefcase, GraduationCap, ArrowUp, FileText, Instagram, Home, Image as GalleryIcon } from 'lucide-react';
+import { Mail, Phone, Linkedin, Eye, ExternalLink, Award, Code, Video, Briefcase, GraduationCap, ArrowUp, FileText, Instagram, Home, Image as GalleryIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -61,7 +61,7 @@ const Portfolio = () => {
 
   const handleDownloadResume = () => {
     // Open Google Drive resume file
-    window.open('https://drive.google.com/file/d/1PWB5F-T8iOjqzfM9Hl2sf86bhe81-XCP/view?usp=drive_link', '_blank');
+    window.open('https://drive.google.com/file/d/12Q1gnQvUHePFhV-zUNNryyIRA0-B94I0/view?usp=sharing', '_blank');
   };
 
   const handleViewReport = (pdfUrl: string) => {
@@ -137,7 +137,7 @@ const Portfolio = () => {
       <nav className="fixed top-0 w-full bg-black/20 backdrop-blur-lg border-b border-white/10 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-white">Aditya Ram</h1>
+            <h1 className="text-2xl font-bold text-white">Aditya Ram Natarajan</h1>
             <div className="hidden md:flex space-x-6">
               {['About', 'Experience', 'Projects', 'Skills', 'Contact'].map((item) => (
                 <button
@@ -197,25 +197,28 @@ const Portfolio = () => {
         <div className="container mx-auto text-center">
           <div className="w-32 h-32 rounded-full mx-auto mb-8 overflow-hidden border-4 border-purple-500 animate-scale-in">
             <img 
-              src="/lovable-uploads/d9d9de10-a47e-41f0-a6e3-9912965d62d6.png" 
-              alt="Aditya Ram" 
-              className="w-full h-full object-cover"
+              src="/lovable-uploads/pfp-img.png" 
+              alt="Aditya Ram Natarajan" 
+              className="w-auto h-auto object-cover"
             />
           </div>
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 animate-fade-in">
-            Aditya Ram
+            Aditya Ram Natarajan
           </h1>
+          <p className="text-xl md:text-3xl font-bold text-white mb-6 animate-fade-in">
+            Creative in nature, Developer by choice.
+          </p>
           <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto animate-fade-in delay-200">
-            Full-Stack Developer & Video Editor with a passion for creating scalable web applications and high-impact digital content
+            Full-Stack Developer turning ideas into scalable, production-ready web applications. Bridging robust backends with modern website design.
           </p>
           <div className="flex flex-wrap justify-center gap-4 mb-8 animate-fade-in delay-300">
-            <a href="mailto:itzz.aadhii@gmail.com" className="flex items-center text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">
+            <a href="mailto:adityaramnatarajan@gmail.com" className="flex items-center text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">
               <Mail size={20} className="mr-2" />
-              itzz.aadhii@gmail.com
+              adityaramnatarajan@gmail.com
             </a>
-            <a href="tel:+918667301799" className="flex items-center text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">
+            <a href="tel:+919087280909" className="flex items-center text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">
               <Phone size={20} className="mr-2" />
-              +91 8667301799
+              +91 9087280909
             </a>
             <a href="https://linkedin.com/in/aditya-ram-vaitheeswaran" className="flex items-center text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">
               <Linkedin size={20} className="mr-2" />
@@ -234,8 +237,8 @@ const Portfolio = () => {
               onClick={handleDownloadResume}
               className="border-white text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300 hover:scale-105"
             >
-              <Download size={20} className="mr-2" />
-              Download Resume
+              <Eye size={20} className="mr-2" />
+              View Resume
             </Button>
           </div>
         </div>
@@ -249,7 +252,7 @@ const Portfolio = () => {
             <Card className="bg-white/10 backdrop-blur-lg border-white/20 text-white animate-scale-in">
               <CardContent className="p-8 text-center">
                 <p className="text-lg leading-relaxed">
-                  A passionate Full-Stack Developer with a creative edge as a Video Editor. Experienced in building scalable web applications using React.js, Node.js, and Python, while also delivering high-impact digital content through Premiere Pro and After Effects. Strong engineering foundation in Electronics and Instrumentation with exposure to SCADA, PLC, and cloud platforms including Salesforce Trailhead CRM cloud modules. A dynamic multitasker with a proven record in event management, content creation, and entrepreneurship.
+                  Hi, I’m Aditya Natarajan, a Full-Stack Software Engineer based in Chennai, India. I specialize in designing and developing scalable, end-to-end web applications with a strong foundation in Java, Spring Boot, modern front-end frameworks, and relational databases. My engineering journey is rooted in real-world problem-solving. I believe that great software is a balance of clean architecture, intuitive user experience, and continuous optimization. Whether designing database schemas, architecting microservices, or building responsive web interfaces, I enjoy turning complex challenges into maintainable, elegant solutions. I am currently focused on expanding into cloud-native architectures and eager to contribute to collaborative, high-impact engineering teams.
                 </p>
               </CardContent>
             </Card>
